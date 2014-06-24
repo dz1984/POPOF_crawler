@@ -4,17 +4,17 @@ from scrapy.selector import Selector
 
 from POPOF_crawler.items import PopofItem
 
-class NorthSpider(Spider):
+class CenterSpider(Spider):
 
-    name = "north"
-    domain = "http://www.fnpn.gov.tw"
+    name = "center"
+    domain = "http://www.fnpc.gov.tw"
 
     start_urls = [
-        "http://www.fnpn.gov.tw/ct/CFT.php?page=CFTMain&area=N000",
+        "http://www.fnpc.gov.tw/html/ch/CFT.php?page=CFTMain&area=C000",
 
     ]
     def __init__(self,*args, **kwargs):
-        super(NorthSpider, self).__init__(*args, **kwargs)
+        super(CenterSpider, self).__init__(*args, **kwargs)
 
         pass
 
