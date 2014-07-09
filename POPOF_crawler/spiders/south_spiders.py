@@ -23,13 +23,11 @@ class SouthSpider(Spider):
 
         sel = Selector(response)
 
-        url = sel.xpath("//a[contains(text(),'%s')]/@href" % (u"南區分署"))
+        urls = sel.xpath("//a[contains(@href,'http') and re:test(text(),'(%s|%s)')]/@href" % (u"南區分署",u"辦事處")).extract()
 
-        target_url = url.extract()[0]
-
-        print target_url
-
-        yield Request(url=target_url,callback=self.parse_items)
+        for url in urls:
+            target_url = url
+            yield Request(url=target_url,callback=self.parse_items)
 
     def parse_items(self, response):
 

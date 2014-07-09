@@ -31,5 +31,7 @@ EXPORT_FIELDS = [
     'notes',
     'stop',
 ]
+
+CONCURRENT_REQUESTS = 1
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'POPOF_crawler (+http://www.yourdomain.com)'

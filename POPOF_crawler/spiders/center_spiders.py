@@ -21,10 +21,11 @@ class CenterSpider(Spider):
     def parse(self, response):
         sel = Selector(response)
 
-        url = sel.xpath("//td[@class='table-border-yellow']/a/@href").extract()[0]
-        target_url = self.domain + url
+        urls = sel.xpath("//td[@class='table-border-yellow']/a/@href").extract()
 
-        yield Request(url=target_url,callback=self.parse_items)
+        for url in urls:
+            target_url = self.domain + url
+            yield Request(url=target_url,callback=self.parse_items)
 
     def parse_items(self, response):
 
