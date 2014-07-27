@@ -10,7 +10,7 @@ from POPOF_crawler.items import PopofItem
 class CenterSpider(Spider):
 
     name = "center"
-    code = "N"
+    code = "C"
     domain = "http://www.fnpc.gov.tw"
 
     start_urls = [
