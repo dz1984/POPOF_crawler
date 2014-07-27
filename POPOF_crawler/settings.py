@@ -24,6 +24,7 @@ ITEM_PIPELINES = {
 # By specifying the fields to export, the CSV export honors the order
 # rather than using a random order.
 EXPORT_FIELDS = [
+    'id',
     'addr',
     'area',
     'category',

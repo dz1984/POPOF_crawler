@@ -7,6 +7,7 @@ from scrapy.item import Item, Field
 
 class PopofItem(Item):
     # define the fields for your item here like:
+    id = Field()
     addr = Field()
     area = Field()
     category = Field()

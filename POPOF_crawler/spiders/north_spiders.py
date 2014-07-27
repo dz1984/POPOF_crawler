@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+import re
+
 from scrapy.http import Request
 from scrapy.spider import Spider
 from scrapy.selector import Selector
@@ -7,6 +10,7 @@ from POPOF_crawler.items import PopofItem
 class NorthSpider(Spider):
 
     name = "north"
+    code = "N"
     domain = "http://www.fnpn.gov.tw"
 
     start_urls = [
@@ -38,7 +42,15 @@ class NorthSpider(Spider):
         def extract_div_span_data(td):
             return td.xpath("div/span/text()").extract()[0].encode('utf-8')
 
+        def generate_id(year, batch_no, serial_no):
+            return self.code + year.zfill(3) + batch_no.zfill(2)  + serial_no.decode('utf-8').replace(u'\xa0','').zfill(2)
+
+
         sel = Selector(response)
+
+        # catch the case_title (include year, batch_no)
+        case_title = sel.xpath("//div[@class='12-oran-warning']/text()").extract()[0]
+        year, batch_no = re.findall(u".*[分署|辦事處](\d+)年.*第(\d+)批.*", case_title)[0]
 
         # catch all tr tag of this table
         tr_list = sel.xpath("//table[@class='table-border-yellow']/tr")
@@ -62,10 +74,12 @@ class NorthSpider(Spider):
 
                 prev_item = items[-1]
 
+                item['id'] = prev_item['id']
                 item['security_deposits'] = prev_item['security_deposits']
                 item['notes'] = prev_item['notes']
                 item['stop'] = prev_item['stop']
             else:
+                item['id'] = generate_id(year, batch_no ,extract_div_span_data(tds[0]))
                 item['addr'] = extract_div_data(tds[1])
                 item['area'] = extract_div_data(tds[2])
                 item['category'] = extract_span_data(tds[3])
