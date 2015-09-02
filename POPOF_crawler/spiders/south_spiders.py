@@ -6,31 +6,28 @@ from scrapy.spider import Spider
 from scrapy.selector import Selector
 
 from POPOF_crawler.items import PopofItem
+from BeautifulSoup import BeautifulSoup
 
 class SouthSpider(Spider):
 
     name = "south"
     code = "S"
-    domain = "http://www.fnps.gov.tw/"
+    domain = "http://www.fnps.gov.tw/NPBO_S/Web/"
 
     start_urls = [
         "http://www.fnps.gov.tw/NPBO_S/Web/CFT-1.php",
-
     ]
+
     def __init__(self,*args, **kwargs):
         super(SouthSpider, self).__init__(*args, **kwargs)
 
-        pass
-
     def parse(self, response):
-
-        sel = Selector(response)
-
-        urls = sel.xpath("//a[contains(@href,'http') and re:test(text(),'(%s|%s)')]/@href" % (u"南區分署",u"辦事處")).extract()
-
-        for url in urls:
-            target_url = url
-            yield Request(url=target_url,callback=self.parse_items)
+        soup = BeautifulSoup(response.body_as_unicode())
+        for tr in soup.find('td', {'id':'oe1'}).findAll('tr'):
+            link = tr.find('a')
+            if link == None:
+                continue
+            yield Request(url=self.domain + link.get('href'),callback=self.parse_items)
 
     def parse_items(self, response):
 
